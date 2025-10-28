@@ -48,10 +48,9 @@ gsettings set "$gnome_schema" font-name "$font_name"
 gsettings set "$gnome_schema" color-scheme "$prefer_dark_theme_value"
 
 # Update cursor for Hyprland
-log "exec-once = hyprctl setcursor $cursor_theme $cursor_size" >~/.config/hypr/conf/cursor.conf
 hyprctl setcursor $cursor_theme $cursor_size
 
 # Update gsettings for open any terminal
 gsettings set org.cinnamon.desktop.default-applications.terminal exec "$terminal"
-#gsettings set org.gnome.nautilus use-generic-terminal-name "true"
+gsettings set org.gnome.nautilus use-generic-terminal-name "true"
 #gsettings set com.github.stunkymonkey.nautilus-open-any-terminal keybindings "<Ctrl><Alt>t"
