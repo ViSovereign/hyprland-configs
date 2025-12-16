@@ -1,1 +1,1 @@
-nemo
+kitty -e yazi
