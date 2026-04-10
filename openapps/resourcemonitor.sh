@@ -1,1 +1,2 @@
-alacritty -e btop
+#ghostty -e btop
+missioncenter

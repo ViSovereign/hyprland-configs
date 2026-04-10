@@ -1,1 +1,1 @@
-vicinae vicinae://extensions/vicinae/vicinae/search-emojis
+vicinae vicinae://extensions/vicinae/core/search-emojis
