@@ -3,30 +3,32 @@
 #     ┃ ┃┃┗┫ ┃    ┣━┛┣━┫┣━┛┃┣┳┛┃ ┃┗━┓
 #     ╹ ╹╹ ╹ ╹    ╹  ╹ ╹╹  ╹╹┗╸┗━┛┗━┛
 
-set -euo pipefail
+#set -euo pipefail
+
+# --- File to store toggle ---
+TARGET_FILE="$HOME/.config/hypr/scripts/papirus-tinter-conf.log"
 
 # ----------------------------- Configuration -----------------------------
-CONF_FILE="$HOME/.config/hypr/noctalia/noctalia-colors.conf"
+CONF_FILE="$HOME/.config/hypr/noctalia.lua"
 
 if [[ ! -f "$CONF_FILE" ]]; then
-    echo "Error: Config file not found: $CONF_FILE" >&2
+    echo "Error: Config file not found: $CONF_FILE" > $TARGET_FILE
     exit 1
 fi
 
-echo "Reading color from: $CONF_FILE" >&2
+echo "Reading color from: $CONF_FILE" >> $TARGET_FILE
 
 # ====================== ROBUST EXTRACTION ======================
-PRIMARY_RAW=$(grep -E '^\s*(\$)?primary\s*=' "$CONF_FILE" | head -n1)
-
+PRIMARY_RAW=$(grep -E '^local primary\s*=' "$CONF_FILE" | head -n1)
 if [[ -z "$PRIMARY_RAW" ]]; then
-    echo "Error: Could not find 'primary' or '\$primary' in $CONF_FILE" >&2
+    echo "Error: Could not find 'primary' or '\$primary' in $CONF_FILE" >> $TARGET_FILE
     exit 1
 fi
 
 # Extract and clean the value after '='
 PRIMARY=$(echo "$PRIMARY_RAW" | sed 's/.*=\s*//' | tr -d '";' | xargs)
 
-echo "Raw primary value: '$PRIMARY'" >&2
+echo "Raw primary value: '$PRIMARY'" >> $TARGET_FILE
 
 # Convert rgb() or hex to #RRGGBB
 if [[ "$PRIMARY" =~ ^rgb\((.*)\)$ ]]; then
@@ -43,18 +45,18 @@ if [[ "$PRIMARY" =~ ^rgb\((.*)\)$ ]]; then
         b=$(printf '%02x' "${BASH_REMATCH[3]}")
         HEX="#${r}${g}${b}"
     else
-        echo "Error: Unsupported rgb() format: rgb($inside)" >&2
+        echo "Error: Unsupported rgb() format: rgb($inside)" >> $TARGET_FILE
         exit 1
     fi
 
 elif [[ "$PRIMARY" =~ ^#?([0-9a-fA-F]{6})$ ]]; then
     HEX="#${BASH_REMATCH[1]}"
 else
-    echo "Error: Could not parse color: $PRIMARY" >&2
+    echo "Error: Could not parse color: $PRIMARY" >> $TARGET_FILE
     exit 1
 fi
 
-echo "Converted to: $HEX" >&2
+echo "Converted to: $HEX" >> $TARGET_FILE
 
 # ====================== EXACT PAPIRUS COLORS (from your list) ======================
 find_closest_color() {
@@ -111,30 +113,31 @@ find_closest_color() {
 }
 
 COLOR_PRESET=$(find_closest_color "$HEX")
-echo "Selected Papirus color: $COLOR_PRESET" >&2
+echo "Selected Papirus color: $COLOR_PRESET" >> $TARGET_FILE
 
 # ====================== APPLY ======================
 if ! command -v papirus-folders &>/dev/null; then
-    echo "Error: 'papirus-folders' is not installed." >&2
-    echo "Install with: sudo apt install papirus-folders" >&2
+    echo "Error: 'papirus-folders' is not installed." > $TARGET_FILE
+    echo "Install with: sudo pacman -S papirus-folders" > $TARGET_FILE
     exit 1
 fi
 
-echo "Applying color '$COLOR_PRESET' to Papirus folders..." >&2
+echo "Applying color '$COLOR_PRESET' to Papirus folders..." >> $TARGET_FILE
 
 if [[ -d "$HOME/.local/share/icons/Papirus" ]]; then
     if papirus-folders --theme Papirus -C "$COLOR_PRESET" 2>/tmp/papirus-folders.log; then
-        echo "Success: Papirus folders tinted with '$COLOR_PRESET' (closest to $HEX)" >&2
+        echo "Success: Papirus folders tinted with '$COLOR_PRESET' (closest to $HEX)" >> $TARGET_FILE
+        #notify-send "Success: Papirus folders tinted with '$COLOR_PRESET' (closest to $HEX)"
     else
-        echo "Error: papirus-folders failed. Check /tmp/papirus-folders.log" >&2
+        echo "Error: papirus-folders failed. Check /tmp/papirus-folders.log" >> $TARGET_FILE
         exit 1
     fi
 else
-    echo "Warning: User Papirus directory not found. Trying system-wide..." >&2
+    echo "Warning: User Papirus directory not found. Trying system-wide..." >> $TARGET_FILE
     if papirus-folders -C "$COLOR_PRESET" 2>/tmp/papirus-folders.log; then
-        echo "Success: Applied system-wide with color '$COLOR_PRESET'" >&2
+        echo "Success: Applied system-wide with color '$COLOR_PRESET'" >> $TARGET_FILE
     else
-        echo "Error: Failed to apply color." >&2
+        echo "Error: Failed to apply color." >> $TARGET_FILE
         exit 1
     fi
 fi

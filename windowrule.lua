@@ -27,26 +27,16 @@ hl.window_rule({
     content = "video",
     opacity = "1.0 override",
     border_size = 0,
-    rounding = 0,
+    rounding = 5,
 
 })
 
 hl.layer_rule({
-    match        = { namespace = "vicinae" },
-    blur         = true,
-    ignore_alpha = 0.25,
-})
-
-hl.layer_rule({
-    match        = { namespace = "noctalia-background-.*$" },
-    blur         = true,
-    blur_popups  = false,
-    ignore_alpha = 0.25,
-})
-
-hl.layer_rule({
-    match        = { namespace = "noctalia.*$" },
-    blur         = true,
-    blur_popups  = false,
-    ignore_alpha = 0.25,
+    name = "noctalia",
+    match = {
+        namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd)$",
+    },
+    ignore_alpha = 0.5,
+    blur = true,
+    blur_popups = true,
 })

@@ -2,7 +2,7 @@
 require("env")
 require("autostart")
 require("monitors")
-require("colors")
+require("noctalia")
 require("keybinds")
 require("windowrule")
 
@@ -20,7 +20,7 @@ require("windowrule")
 --   },
 -- })
 
-hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
+hl.permission("/usr/(bin|local/bin)/noctalia", "screencopy", "allow")
 hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
 -- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
 
@@ -32,8 +32,8 @@ hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencop
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
-        gaps_in          = 5,
-        gaps_out         = 10,
+        gaps_in          = 0,
+        gaps_out         = 15,
 
         border_size      = 2,
 
@@ -46,11 +46,16 @@ hl.config({
         layout           = "dwindle",
     },
 
+    scrolling = {
+        column_width = 0.9,
+        direction = "left",
+        follow_min_visible = 0.1,
+    },
+
     decoration = {
         rounding         = 10,
         rounding_power   = 3,
 
-        -- Change transparency of focused and unfocused windows
         active_opacity   = 1.0,
         inactive_opacity = 0.85,
 
@@ -187,7 +192,11 @@ hl.device({
     sensitivity = -0.5,
 })
 
-
+hl.config({
+    cursor = {
+        no_hardware_cursors = 1
+    }
+})
 
 
 --------------------------------

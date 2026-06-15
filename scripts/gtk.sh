@@ -24,7 +24,7 @@ cursor_theme="$(grep 'gtk-cursor-theme-name' "$config" | sed 's/.*\s*=\s*//')"
 cursor_size="$(grep 'gtk-cursor-theme-size' "$config" | sed 's/.*\s*=\s*//')"
 font_name="$(grep 'gtk-font-name' "$config" | sed 's/.*\s*=\s*//')"
 prefer_dark_theme="$(grep 'gtk-application-prefer-dark-theme' "$config" | sed 's/.*\s*=\s*//')"
-terminal=$(cat $HOME/.config/hypr/openapps/terminal.sh)
+terminal="kitty"
 
 # Value for debugging
 log "GTK-Theme:" $gtk_theme
