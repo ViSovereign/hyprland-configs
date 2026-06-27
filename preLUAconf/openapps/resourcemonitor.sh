@@ -1,2 +1,0 @@
-#ghostty -e btop
-missioncenter

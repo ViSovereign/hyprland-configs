@@ -5,7 +5,7 @@
 
 -- Set Variables
 local mainMod     = "SUPER"
-local browser     = "librewolf"
+local browser     = "zen-browser"
 local discord     = "vesktop"
 local terminal    = "kitty"
 local fileManager = "nautilus"
@@ -30,6 +30,13 @@ hl.bind(mainMod .. " + CTRL + W",
 
 hl.bind(mainMod .. " + COMMA",
     hl.dsp.exec_cmd(ipc .. "settings-toggle"))
+
+-- Snappt Switcher
+-- Alt+Tab (standard MRU)
+hl.bind("ALT + Tab", hl.dsp.exec_cmd("snappy-switcher next --mod alt"))
+
+-- Super+Tab (workspace-filtered)
+hl.bind("SUPER + TAB", hl.dsp.exec_cmd("snappy-switcher next --workspace --mod super"))
 
 -- Apps
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd(terminal))
@@ -61,6 +68,30 @@ hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 
+local function switchMonitors()
+    return [=[bash -c '
+        monitors_json=$(hyprctl monitors -j)
+
+        target_workspace=$(
+          jq -r "
+            . as \$monitors
+            | .[] | select(.focused == true).name as \$focused
+            | if \$focused == \"DP-1\" then
+                \$monitors[] | select(.name == \"DP-2\") | .activeWorkspace.id
+              elif \$focused == \"DP-2\" then
+                \$monitors[] | select(.name == \"DP-1\") | .activeWorkspace.id
+              else
+                empty
+              end
+          " <<< "$monitors_json"
+        )
+
+        if [ -n "$target_workspace" ]; then
+          hyprctl dispatch "hl.dsp.focus({ workspace = $target_workspace })"
+        fi
+    ']=]
+end
+
 local function switchWorkspaceOnActive(action, key)
     return string.format(
         [[bash -lc 'mon=$(hyprctl monitors -j | jq -r ".[] | select(.focused == true).name"); off=0; [ "$mon" = "DP-2" ] && off=3; ws=$((%d + off)); hyprctl dispatch "hl.dsp.%s({ workspace = $ws })"']],
@@ -81,6 +112,10 @@ for key = 1, 3 do
     )
 end
 
+-- Swap monitor on the cheap
+hl.bind(mainMod .. " + GRAVE", hl.dsp.exec_cmd(switchMonitors()))
+
+
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + N", hl.dsp.workspace.toggle_special("magic"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
@@ -94,20 +129,20 @@ hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. " volume-up"),
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. "volume-up"),
     { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. " volume-down"),
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. "volume-down"),
     { locked = true, repeating = true })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc .. " volume-mute"),
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd(ipc .. "volume-mute"),
     { locked = true, repeating = false })
-hl.bind("XF86VoiceCommand", hl.dsp.exec_cmd(ipc .. " mic-mute"),
+hl.bind("XF86VoiceCommand", hl.dsp.exec_cmd(ipc .. "mic-mute"),
     { locked = true, repeating = false })
 
 -- Requires playerctl
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd(ipc .. "media next"), { locked = true })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd(ipc .. "media toggle"), { locked = true })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd(ipc .. "media toggle"), { locked = true })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd(ipc .. "media previous"), { locked = true })
 
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(ipc .. " volume-down"),
     { locked = true, repeating = true })

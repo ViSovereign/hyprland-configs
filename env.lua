@@ -1,6 +1,7 @@
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 hl.env("QS_ICON_THEME", "Papirus")
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 hl.env("GBM_BACKEND", "nvidia-drm")
 hl.env("LIBVA_DRIVER_NAME", "nvidia")
 hl.env("SDL_VIDEODRIVER", "wayland,x11")

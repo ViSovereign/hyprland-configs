@@ -2,7 +2,7 @@
 require("env")
 require("autostart")
 require("monitors")
-require("noctalia")
+require("noctalia").apply_theme()
 require("keybinds")
 require("windowrule")
 
@@ -20,7 +20,7 @@ require("windowrule")
 --   },
 -- })
 
-hl.permission("/usr/(bin|local/bin)/noctalia", "screencopy", "allow")
+--hl.permission("/usr/(bin|local/bin)/noctalia", "screencopy", "allow")
 hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
 -- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
 
@@ -33,7 +33,7 @@ hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencop
 hl.config({
     general = {
         gaps_in          = 0,
-        gaps_out         = 15,
+        gaps_out         = 5,
 
         border_size      = 2,
 
