@@ -40,3 +40,9 @@ hl.layer_rule({
     blur = true,
     blur_popups = true,
 })
+
+hl.window_rule({
+    name      = "discord-on-ws4",
+    match     = { class = "^(vesktop)$" },
+    workspace = "4 silent"
+})
