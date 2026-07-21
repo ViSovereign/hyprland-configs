@@ -19,7 +19,7 @@ hl.bind(mainMod .. " + SPACE",
 hl.bind(mainMod .. " + SHIFT + E",
     hl.dsp.exec_cmd(ipc .. "panel-toggle launcher /emo "))
 
-hl.bind("CTRL + ALT + DELETE",
+hl.bind(mainMod .. " + ESCAPE",
     hl.dsp.exec_cmd(ipc .. "panel-toggle session"))
 
 hl.bind(mainMod .. " + V",
@@ -50,9 +50,6 @@ hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd(editor))
 --hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd('grim -g "$(slurp)" - | swappy -f - '))
 hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd(ipc .. 'screenshot-region'))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(ipc .. "wallpaper-random DP-1"))
-
--- Noctalia Related
---hl.bind(mainMod .. " + SHIFT + I", hl.dsp.exec_cmd(ipc .. "plugin:assistant-panel toggle"))
 
 -- Window Related Rules
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
