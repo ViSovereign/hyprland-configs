@@ -46,3 +46,9 @@ hl.window_rule({
     match     = { class = "^(vesktop)$" },
     workspace = "4 silent"
 })
+
+hl.window_rule({
+    name      = "discord-on-ws1",
+    match     = { class = "^(steam)$" },
+    workspace = "1 silent"
+})
